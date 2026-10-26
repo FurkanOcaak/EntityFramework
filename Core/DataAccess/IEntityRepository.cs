@@ -1,11 +1,10 @@
-﻿using Entities.Abstract;
-using Entities.Concrete;
+﻿using Core.Entites;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 
-namespace DataAccess.Abstract
+namespace Core.Entites
 {// class referans tip, IEntity referans tip, IEntity interface implement eden classlar için geçerli olacak
     // new() referans tipin newlenebilir olması için
     public interface IEntityRepository<T> where T : class,IEntity, new()
