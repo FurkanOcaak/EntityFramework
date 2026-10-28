@@ -33,7 +33,7 @@ namespace Business.Concrete
 
         public IDataResult<List<Product>> GetAll()
         {
-            if (DateTime.Now.Hour == 22)
+            if (DateTime.Now.Hour == 12)
             {
                 return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
             }
@@ -63,31 +63,6 @@ namespace Business.Concrete
             //    return new ErrorDataResult<List<ProductDetailDto>>(Messages.MaintenanceTime);
             //}
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails());
-        }
-
-        IDataResult<List<Product>> IProductService.GetAll()
-        {
-            throw new NotImplementedException();
-        }
-
-        IDataResult<List<Product>> IProductService.GetAllByCategoryId(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        IDataResult<List<Product>> IProductService.GetById(int productId)
-        {
-            throw new NotImplementedException();
-        }
-
-        IDataResult<List<Product>> IProductService.GetByUnitPrice(decimal min, decimal max)
-        {
-            throw new NotImplementedException();
-        }
-
-        IDataResult<List<ProductDetailDto>> IProductService.GetProductDetails()
-        {
-            throw new NotImplementedException();
         }
     }
 }

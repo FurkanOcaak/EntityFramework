@@ -1,4 +1,9 @@
 
+using Business.Abstract;
+using Business.Concrete;
+using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
+
 namespace WebAPI
 {
     public class Program
@@ -10,6 +15,10 @@ namespace WebAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddSingleton<IProductService,ProductManager>();
+            builder.Services.AddSingleton<IProductDal, EfProductDal>();
+            
+            
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
@@ -27,7 +36,7 @@ namespace WebAPI
 
 
             app.MapControllers();
-            app.MapGet("/", () => Results.Redirect("/weatherforecast"));///////*********
+            //app.MapGet("/", () => Results.Redirect("/weatherforecast"));///////*********
 
             app.Run();
         }
