@@ -27,6 +27,7 @@ namespace WebAPI
 
 
             app.MapControllers();
+            app.MapGet("/", () => Results.Redirect("/weatherforecast"));///////*********
 
             app.Run();
         }

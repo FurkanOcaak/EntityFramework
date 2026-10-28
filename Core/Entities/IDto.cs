@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Entites
 {
-    internal class IDto
+    public class IDto
     {
     }
 }

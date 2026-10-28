@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Entities.Concrete;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -8,7 +9,7 @@ namespace WebAPI.Controllers
     public class ProductsController : ControllerBase
     {
         [HttpGet]
-        public string Get()
+        public List<Product> Get()
         {
             return "Merhaba";
         }
