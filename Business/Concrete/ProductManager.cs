@@ -22,13 +22,25 @@ namespace Business.Concrete
 
         public IResult Add(Product product)
         {
-            if (product.ProductName.Length < 2)
-            {
-                return new ErrorResult(Messages.ProductNameInvalid);
-            }
+            //if (product.UnitPrice<= 0)
+            //{
+            //    return new ErrorResult(Messages.UnitPriceInvalid);
+            //}
+           // bunlar productvalidatorde yapılır
+            //if (product.ProductName.Length < 2)
+            //{
+            //    return new ErrorResult(Messages.ProductNameInvalid);
+            //}
+
             _productDal.Add(product);
 
             return new SuccessResult(Messages.ProductAdded);
+        }
+
+        public IResult Delete(Product product)
+        {
+            _productDal.Delete(product);
+            return new SuccessResult(Messages.ProductDeleted);
         }
 
         public IDataResult<List<Product>> GetAll()
