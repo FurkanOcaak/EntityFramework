@@ -4,12 +4,14 @@ using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
 using FluentValidation;
+using Microsoft.Identity.Client.NativeInterop;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,11 +21,12 @@ namespace Business.Concrete
     public class ProductManager : IProductService
     {
         IProductDal _productDal;
+        ICategoryService _categoryService;
 
-
-        public ProductManager(IProductDal productDal)
+        public ProductManager(IProductDal productDal, ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
 
         }
 
@@ -31,16 +34,18 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            if (CheckIfProductCountofCategoryCorrect(product.CategoryId).Success)
-            {
-                if (CheckIfProductNameAlreadyExists(product.ProductName).Success)
-                {
-                    _productDal.Add(product);
+            IResult result = BusinessRules.Run(CheckIfProductNameAlreadyExists(product.ProductName),
+                CheckIfProductCountofCategoryCorrect(product.CategoryId), CheckIfCategoryLimitExceded());
 
-                    return new SuccessResult(Messages.ProductAdded);
-                }
+            if (result != null)
+            {
+                return result;
             }
-            return new ErrorResult();
+
+            _productDal.Add(product);
+
+            return new SuccessResult(Messages.ProductAdded);
+
         }
 
         public IResult Delete(Product product)
@@ -86,11 +91,15 @@ namespace Business.Concrete
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Update(Product product)
         {
-            
+
             _productDal.Add(product);
 
             return new SuccessResult(Messages.ProductAdded);
         }
+
+
+
+
 
         private IResult CheckIfProductCountofCategoryCorrect(int categoryId)
         {
@@ -112,6 +121,15 @@ namespace Business.Concrete
             return new SuccessResult();
         }
 
+        private IResult CheckIfCategoryLimitExceded()
+        {
+            var result = _categoryService.GetAll();
+            if (result.Data.Count>15)
+            {
+                return new ErrorResult(Messages.CategoryLimitExceded);
+            }
+            return new SuccessResult();
+        }
 
-    } 
+    }
 }
