@@ -49,7 +49,7 @@ namespace WebAPI.Controllers
 
         }
 
-        [HttpPost("add")]//silme ve güncelleme için de kullanılır
+        [HttpPost("add")]
         public IActionResult Add(Product product)
         {
             var result = _productService.Add(product);
