@@ -6,6 +6,10 @@ using Business.Concrete;
 using Business.DependencyResolvers.Autofac;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
+using Core.Utilities.Security.JWT;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Core.Utilities.Security.Encryption;
 
 namespace WebAPI
 {
@@ -20,6 +24,22 @@ namespace WebAPI
             builder.Services.AddControllers();
             //builder.Services.AddSingleton<IProductService,ProductManager>();
             //builder.Services.AddSingleton<IProductDal, EfProductDal>();
+            var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidIssuer = tokenOptions.Issuer,
+                        ValidAudience = tokenOptions.Audience,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
+                    };
+                });
 
             ///***
             builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
@@ -45,6 +65,7 @@ namespace WebAPI
 
             app.UseAuthorization();
 
+            app.UseAuthentication();
 
             app.MapControllers();
             //app.MapGet("/", () => Results.Redirect("/weatherforecast"));///////*********
