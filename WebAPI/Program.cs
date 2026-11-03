@@ -13,6 +13,7 @@ using Core.Utilities.Security.Encryption;
 using Core.Utilities.IoC;
 using Core.DependencyResolvers;
 using Core.Extensions;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 
 
 namespace WebAPI
@@ -24,12 +25,12 @@ namespace WebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            
+
             builder.Services.AddControllers();
             //builder.Services.AddSingleton<IProductService,ProductManager>();
             //builder.Services.AddSingleton<IProductDal, EfProductDal>();
 
-            
+            builder.Services.AddCors();
 
             var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
@@ -69,6 +70,8 @@ namespace WebAPI
             {
                 app.MapOpenApi();
             }
+
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
 
             app.UseHttpsRedirection();
 
