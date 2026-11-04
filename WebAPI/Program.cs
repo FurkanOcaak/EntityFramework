@@ -71,6 +71,8 @@ namespace WebAPI
                 app.MapOpenApi();
             }
 
+            app.ConfigureCustomExceptionMiddleware();
+
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
 
             app.UseHttpsRedirection();
@@ -80,7 +82,7 @@ namespace WebAPI
             app.UseAuthentication();
 
             app.MapControllers();
-            //app.MapGet("/", () => Results.Redirect("/weatherforecast"));///////*********
+            app.MapGet("/", () => Results.Redirect("/weatherforecast"));///////*********
 
             app.Run();
         }
