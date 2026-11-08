@@ -1,6 +1,8 @@
+using Core.Entites;
+
 namespace Entities.DTOs
 {
-    public class ProductCreateDto
+    public class ProductCreateDto: IDto
     {
         public int ProductId { get; set; }
         public int CategoryId { get; set; }

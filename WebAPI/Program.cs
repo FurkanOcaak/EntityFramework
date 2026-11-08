@@ -14,6 +14,7 @@ using Core.Utilities.IoC;
 using Core.DependencyResolvers;
 using Core.Extensions;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+using Serilog;
 
 
 namespace WebAPI
@@ -25,6 +26,20 @@ namespace WebAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+
+            builder.Host.UseSerilog((context, configuration) =>
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .WriteTo.Console()
+        .WriteTo.Seq("http://localhost:5342")
+);
+
+
+
+
+
+
 
             builder.Services.AddControllers();
             //builder.Services.AddSingleton<IProductService,ProductManager>();
@@ -76,6 +91,8 @@ namespace WebAPI
             app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader().AllowAnyMethod());
 
             app.UseHttpsRedirection();
+
+            app.UseSerilogRequestLogging();
 
             app.UseAuthorization();
 

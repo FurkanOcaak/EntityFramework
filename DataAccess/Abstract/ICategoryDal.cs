@@ -6,13 +6,9 @@ using System.Text;
 
 namespace DataAccess.Abstract
 {
-    public interface ICategoryDal: IEntityRepository<Category>// bundan dolayı ICategoryDal interface'i, IEntityRepository<Product> interface'ini implement eder. Bu sayede ICategoryDal interface'i, IEntityRepository<Product> interface'inin tüm metotlarını kullanabilir.
+    public interface ICategoryDal: IEntityRepository<Category>
     {
-        //List<Category> GetAll();
-        //void Add(Category category);
-        //void Update(Category category);
-        //void Delete(Category category);
-        //List<Category> GetAllByCategory(int categoryId);
+        
 
 
     }

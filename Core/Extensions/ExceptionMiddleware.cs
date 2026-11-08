@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Serilog;
 
 namespace Core.Extensions
 {
@@ -26,6 +27,8 @@ namespace Core.Extensions
             }
             catch (Exception e)
             {
+
+                Log.Error(e, "Beklenmeyen bir hata oluştu. Path: {Path}", httpContext.Request.Path);
                 await HandleExceptionAsync(httpContext, e);
             }
         }

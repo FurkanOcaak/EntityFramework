@@ -21,14 +21,9 @@ namespace WebAPI.Controllers
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            //return new List<Product>
-            //{
-            //    new Product { ProductId = 1, ProductName = "Elma" },
-            //    new Product { ProductId = 2, ProductName = "Armut" },
-            //};
+            //throw new Exception("Seq loglama altyapısı testi");
 
-          //  Thread.Sleep(2000);
-            //IProductService productService = new ProductManager(new EfProductDal());
+            //  Thread.Sleep(2000);
             var result = _productService.GetAll();
             if (result.Success)
             {
