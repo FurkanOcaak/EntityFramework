@@ -16,6 +16,7 @@ using Core.Extensions;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Serilog;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Elastic.Apm.NetCoreAll;
 
 namespace WebAPI
 {
@@ -85,7 +86,19 @@ namespace WebAPI
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
 
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+
             var app = builder.Build();
+
+            app.UseAllElasticApm(builder.Configuration!);
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
