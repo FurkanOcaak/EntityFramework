@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
         [HttpGet("getall")]
         public IActionResult GetAll()
         {
-            //throw new Exception("Seq loglama altyapısı testi");
+           // throw new Exception("Seq loglama altyapısı testi");
 
             //  Thread.Sleep(2000);
             var result = _productService.GetAll();

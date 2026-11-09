@@ -54,11 +54,13 @@ namespace Business.Concrete
 
         }
 
+        [CacheRemoveAspect("IProductService.Get")]
         public IResult Delete(Product product)
         {
             _productDal.Delete(product);
             return new SuccessResult(Messages.ProductDeleted);
         }
+        
 
         [CacheAspect]
         public IDataResult<List<Product>> GetAll()
@@ -101,9 +103,9 @@ namespace Business.Concrete
         public IResult Update(Product product)
         {
 
-            _productDal.Add(product);
+            _productDal.Update(product);
 
-            return new SuccessResult(Messages.ProductAdded);
+            return new SuccessResult(Messages.ProductUpdated);
         }
 
 

@@ -15,7 +15,7 @@ using Core.DependencyResolvers;
 using Core.Extensions;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using Serilog;
-
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 
 namespace WebAPI
 {
@@ -37,15 +37,13 @@ namespace WebAPI
 
 
 
-
-
-
-
             builder.Services.AddControllers();
             //builder.Services.AddSingleton<IProductService,ProductManager>();
             //builder.Services.AddSingleton<IProductDal, EfProductDal>();
 
             builder.Services.AddCors();
+
+           
 
             var tokenOptions = builder.Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
@@ -63,6 +61,13 @@ namespace WebAPI
                         IssuerSigningKey = SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey)
                     };
                 });
+
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "localhost:6379";
+                options.InstanceName = "AgarthaProject_";
+            });
+
             builder.Services.AddDependencyResolvers(new ICoreModule[] { new CoreModule() });
 
 
@@ -74,6 +79,8 @@ namespace WebAPI
                 options.RegisterModule(new AutofacBusinessModule());
             });
             ///***
+            ///
+           
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
@@ -85,6 +92,7 @@ namespace WebAPI
             {
                 app.MapOpenApi();
             }
+
 
             app.ConfigureCustomExceptionMiddleware();
 
