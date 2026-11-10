@@ -7,23 +7,30 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    //amacı db tabloları ile proje classlarını birbirine bağlamak
-    public class NorthwindContext: DbContext
+    public class NorthwindContext : DbContext
     {
+        public NorthwindContext()
+        {
+        }
+
+        public NorthwindContext(DbContextOptions<NorthwindContext> options) : base(options)
+        {
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;
-Database=Northwind;Trusted_Connection=true;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=sqlserver;Database=Northwind;User Id=sa;Password=ProjeSifresi123!;TrustServerCertificate=True;MultipleActiveResultSets=true");
+            }
         }
 
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet <Order> Orders { get; set; }
+        public DbSet<Order> Orders { get; set; }
         public DbSet<UserOperationClaim> UserOperationClaims { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<OperationClaim> OperationClaims { get; set; }
-
     }
-
 }

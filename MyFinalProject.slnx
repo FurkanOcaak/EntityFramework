@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="compose.yml" />
+  </Folder>
   <Project Path="Business/Business.csproj" />
   <Project Path="ConsoleUI/ConsoleUI.csproj" />
   <Project Path="Core/Core.csproj" Id="620f0dc8-36ac-455d-91db-7c59a0829ff6" />

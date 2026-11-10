@@ -33,7 +33,7 @@ namespace WebAPI
     configuration
         .ReadFrom.Configuration(context.Configuration)
         .WriteTo.Console()
-        .WriteTo.Seq("http://localhost:5342")
+        .WriteTo.Seq("http://seq:5341")
 );
 
 
@@ -65,7 +65,7 @@ namespace WebAPI
 
             builder.Services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = "localhost:6379";
+                options.Configuration = "redis:6379";
                 options.InstanceName = "AgarthaProject_";
             });
 
@@ -92,13 +92,13 @@ namespace WebAPI
 
             var app = builder.Build();
 
-            app.UseAllElasticApm(builder.Configuration!);
+            app.UseAllElasticApm(builder.Configuration);
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -115,12 +115,13 @@ namespace WebAPI
 
             app.UseSerilogRequestLogging();
 
-            app.UseAuthorization();
-
             app.UseAuthentication();
 
+            app.UseAuthorization();
+
+            
             app.MapControllers();
-            app.MapGet("/", () => Results.Redirect("/weatherforecast"));///////*********
+            //app.MapGet("/", () => Results.Redirect("/weatherforecast"));///////*********
 
             app.Run();
         }

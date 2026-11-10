@@ -1,0 +1,93 @@
+services:
+  redis:
+    image: redis:latest
+    container_name: projem_redis
+    ports:
+      - "6379:6379"
+
+  seq: #username: admin ; password: SeqAdminPass123!
+    image: datalust/seq:latest
+    container_name: projem_seq
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_ADMINPASSWORD=SeqAdminPass123!
+    ports:
+      - "5341:80"
+      - "5342:5341"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+    container_name: projem_elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=false
+      - ELASTIC_PASSWORD=elasticpass
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.10.2
+    container_name: projem_kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=+Io5=kChQOeyJL5ULXXO
+    ports:
+      - "5601:5601" #username: elastic ; password: jxR+YTmv9LuyAQeDH_Gi
+    depends_on:
+      - elasticsearch
+
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:8.10.2
+    container_name: projem_apm_server
+    ports:
+      - "8200:8200"
+    command: >
+      apm-server -e
+      -E setup.kibana.host=kibana:5601
+      -E apm-server.kibana.enabled=true
+      -E apm-server.kibana.host=kibana:5601
+      -E apm-server.kibana.ssl.enabled=false
+      -E apm-server.kibana.ssl.verification_mode=none
+      -E output.elasticsearch.hosts=["elasticsearch:9200"]
+      -E output.elasticsearch.username=elastic
+      -E output.elasticsearch.password=elasticpass
+      -E apm-server.kibana.username=elastic
+      -E apm-server.kibana.password=elasticpass
+    depends_on:
+      - elasticsearch
+      - kibana
+
+  webapi:
+    build: 
+      context: .
+      dockerfile: WebAPI/Dockerfile  
+    container_name: projem_webapi
+    ports:
+      - "8080:8080" 
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ElasticApm__ServerUrl=http://apm-server:8200
+      - ElasticApm__ServiceName=MyFinalProject_WebAPI
+      - ElasticApm__Environment=Development
+      - ElasticApm__LogLevel=Trace
+    depends_on:
+      - redis
+      - seq
+      - apm-server
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: projem_sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=ProjeSifresi123!
+    ports:
+      - "1433:1433"
+
+volumes:
+  es_data:
