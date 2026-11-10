@@ -64,12 +64,13 @@ namespace Core.CrossCuttingConcerns.Caching.Redis
 
         public void RemoveByPattern(string pattern)
         {
-           
-            var redis = ConnectionMultiplexer.Connect("localhost:6379");
-            var server = redis.GetServer("localhost:6379");
+
+            var redis = ConnectionMultiplexer.Connect("redis:6379");
+            var endpoint = redis.GetEndPoints().First();
+            var server = redis.GetServer(endpoint);
             var db = redis.GetDatabase();
 
-           
+
             var keys = server.Keys(pattern: $"*AgarthaProject_*{pattern}*");
 
             

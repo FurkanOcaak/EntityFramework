@@ -57,7 +57,7 @@ services:
       -E output.elasticsearch.username=elastic
       -E output.elasticsearch.password=elasticpass
       -E apm-server.kibana.username=elastic
-      -E apm-server.kibana.password=elasticpass
+      -E apm-server.kibana.password=jxR+YTmv9LuyAQeDH_Gi
     depends_on:
       - elasticsearch
       - kibana
@@ -88,6 +88,11 @@ services:
       - MSSQL_SA_PASSWORD=ProjeSifresi123!
     ports:
       - "1433:1433"
+    volumes:
+      - sql_data:/var/opt/mssql
 
 volumes:
   es_data:
+  sql_data:
+
+

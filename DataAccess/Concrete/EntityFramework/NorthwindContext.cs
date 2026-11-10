@@ -21,7 +21,15 @@ namespace DataAccess.Concrete.EntityFramework
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=sqlserver;Database=Northwind;User Id=sa;Password=ProjeSifresi123!;TrustServerCertificate=True;MultipleActiveResultSets=true");
+                optionsBuilder.UseSqlServer(
+                    "Server=sqlserver,1433;Database=Northwind;User Id=sa;Password=ProjeSifresi123!;TrustServerCertificate=True;MultipleActiveResultSets=true",
+                    sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 5,
+                            maxRetryDelay: TimeSpan.FromSeconds(10),
+                            errorNumbersToAdd: null);
+                    });
             }
         }
 
