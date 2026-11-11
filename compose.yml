@@ -35,9 +35,9 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=+Io5=kChQOeyJL5ULXXO
+      - ELASTICSEARCH_PASSWORD=kibana123
     ports:
-      - "5601:5601" #username: elastic ; password: jxR+YTmv9LuyAQeDH_Gi
+      - "5601:5601" #username: elastic ; password: kibana123
     depends_on:
       - elasticsearch
 
@@ -56,8 +56,8 @@ services:
       -E output.elasticsearch.hosts=["elasticsearch:9200"]
       -E output.elasticsearch.username=elastic
       -E output.elasticsearch.password=elasticpass
-      -E apm-server.kibana.username=elastic
-      -E apm-server.kibana.password=jxR+YTmv9LuyAQeDH_Gi
+      -E apm-server.kibana.username=kibana_system
+      -E apm-server.kibana.password=kibana123
     depends_on:
       - elasticsearch
       - kibana

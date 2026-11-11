@@ -22,7 +22,7 @@ namespace DataAccess.Concrete.EntityFramework
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    "Server=sqlserver,1433;Database=Northwind;User Id=sa;Password=ProjeSifresi123!;TrustServerCertificate=True;MultipleActiveResultSets=true",
+                    "Data Source=localhost,1433;User ID=sa1;Password=ProjeSifresi123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30",
                     sqlServerOptionsAction: sqlOptions =>
                     {
                         sqlOptions.EnableRetryOnFailure(
