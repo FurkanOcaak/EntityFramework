@@ -1,9 +1,8 @@
-﻿using Core.Entities.Concrete;
+﻿
+using Core.Entities.Concrete;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
@@ -13,17 +12,25 @@ namespace DataAccess.Concrete.EntityFramework
         {
         }
 
-        public NorthwindContext(DbContextOptions<NorthwindContext> options) : base(options)
+        public NorthwindContext(
+            DbContextOptions<NorthwindContext> options)
+            : base(options)
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(
+            DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(
-                    "Data Source=localhost,1433;User ID=sa1;Password=ProjeSifresi123!;Connect Timeout=30;Encrypt=True;Trust Server Certificate=True;Application Intent=ReadWrite;Multi Subnet Failover=False;Command Timeout=30",
-                    sqlServerOptionsAction: sqlOptions =>
+                    "Server=sqlserver,1433;" +
+                    "Database=Northwind;" +
+                    "User Id=sa;" +
+                    "Password=ProjeSifresi123!;" +
+                    "Encrypt=True;" +
+                    "TrustServerCertificate=True;",
+                    sqlOptions =>
                     {
                         sqlOptions.EnableRetryOnFailure(
                             maxRetryCount: 5,

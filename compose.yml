@@ -37,7 +37,7 @@ services:
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=kibana123
     ports:
-      - "5601:5601" #username: elastic ; password: kibana123
+      - "5601:5601" #username: elastic ; password: elasticpass
     depends_on:
       - elasticsearch
 
@@ -63,12 +63,12 @@ services:
       - kibana
 
   webapi:
-    build: 
+    build:
       context: .
-      dockerfile: WebAPI/Dockerfile  
+      dockerfile: WebAPI/Dockerfile
     container_name: projem_webapi
     ports:
-      - "8080:8080" 
+      - "8080:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ElasticApm__ServerUrl=http://apm-server:8200
@@ -76,9 +76,15 @@ services:
       - ElasticApm__Environment=Development
       - ElasticApm__LogLevel=Trace
     depends_on:
-      - redis
-      - seq
-      - apm-server
+      redis:
+        condition: service_started
+      seq:
+        condition: service_started
+      apm-server:
+        condition: service_started
+      sqlserver:
+        condition: service_healthy
+
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -90,6 +96,14 @@ services:
       - "1433:1433"
     volumes:
       - sql_data:/var/opt/mssql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - '/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -C -Q "SELECT 1" -b > /dev/null'
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
 
 volumes:
   es_data:
